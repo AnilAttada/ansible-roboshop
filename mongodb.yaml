@@ -20,7 +20,7 @@
 
   - name: Replacing the Ip to remote connections
     ansible.builtin.replace:
-      path: /etc/mongod.Conf
+      path: /etc/mongod.conf
       regexp: '127.0.0.1'
       replace: '0.0.0.0'
 
