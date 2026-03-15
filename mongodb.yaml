@@ -8,7 +8,7 @@
       dest: /etc/yum.repos.d/mongo.repo
   
   - name: Install mongodb server
-    ansible.builtin.dnf:
+    ansible.builtin.dnf: #We are giving dnf as we know we are installing in RedHat. If we are not sure then we can give package.
       name: mongodb-org
       state: present
     
