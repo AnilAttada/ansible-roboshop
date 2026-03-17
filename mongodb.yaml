@@ -1,30 +1,13 @@
-- name: Configuring mongodb server
+- name: configuration of mongodb component
   hosts: mongodb
   become: yes
   tasks:
-  - name: copy the repo
+  - name: copy the mongo repo
     ansible.builtin.copy:
       src: mongo.repo
       dest: /etc/yum.repos.d/mongo.repo
-  
+
   - name: Install mongodb server
-    ansible.builtin.dnf: #We are giving dnf as we know we are installing in RedHat. If we are not sure then we can give package.
+    ansible.builtin.dnf:
       name: mongodb-org
       state: present
-    
-  - name: Start the service
-    ansible.builtin.service:
-      name: mongod
-      state: started
-      enabled: yes
-
-  - name: Replacing the Ip to remote connections
-    ansible.builtin.replace:
-      path: /etc/mongod.conf
-      regexp: '127.0.0.1'
-      replace: '0.0.0.0'
-
-  - name: Restart mongodb
-    ansible.builtin.service:
-      name: mongod
-      state: restarted
