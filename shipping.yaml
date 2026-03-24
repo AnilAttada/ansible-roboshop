@@ -1,15 +1,15 @@
-- name: configuring the shipping component
+- name: configure shipping component
   hosts: shipping
   become: yes
   tasks:
-  - name: Install maven and mysql
+  - name: install maven and mysql
     ansible.builtin.dnf:
       name: "{{ item }}"
-      state: present
+      state: installed
     loop:
     - maven
     - mysql
-
+    
   - name: install PyMySQL and cryptography 
     ansible.builtin.pip:
       name: "{{ item }}"
@@ -18,6 +18,11 @@
     - cryptography
     - PyMySQL
 
+  - name: create app directory
+    ansible.builtin.file:
+      path: /app
+      state: directory
+
   - name: create roboshop system user
     ansible.builtin.user:
       name: roboshop
@@ -25,23 +30,18 @@
       system: true
       home: /app
 
-  - name: create app directory
-    ansible.builtin.file:
-      path: /app
-      state: directory
-
-  - name: download the shipping code
+  - name: download shipping code
     ansible.builtin.get_url:
-      url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
+      url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip 
       dest: /tmp/shipping.zip
 
-  - name: extract the code
+  - name: extract shipping code
     ansible.builtin.unarchive:
       src: /tmp/shipping.zip
       dest: /app
       remote_src: yes
 
-  - name: install dependencies
+  - name: install maven dependencies
     ansible.builtin.command: mvn clean package
     args:
       chdir: /app
@@ -51,7 +51,7 @@
     args:
       chdir: /app
 
-  - name: copy the service to system
+  - name: copy shipping service
     ansible.builtin.copy:
       src: shipping.service
       dest: /etc/systemd/system/shipping.service
@@ -60,7 +60,7 @@
     ansible.builtin.systemd_service:
       daemon_reload: true
 
-  - name: enable and start service
+  - name: enable and start shipping
     ansible.builtin.service:
       name: shipping
       state: started
