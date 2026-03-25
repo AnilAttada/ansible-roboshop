@@ -10,19 +10,13 @@
     - maven
     - mysql
     
-  # - name: install PyMySQL and cryptography 
-  #   ansible.builtin.pip:
-  #     name: "{{ item }}"
-  #     executable: pip3.9
-  #   loop:
-  #   - cryptography
-  #   - PyMySQL
-
-  - name: install PyMySQL and cryptography
+  - name: install PyMySQL and cryptography 
     ansible.builtin.pip:
-      name: PyMySQL
+      name: "{{ item }}"
       executable: pip3.9
-      state: present
+    loop:
+    - cryptography
+    - PyMySQL
 
   - name: create app directory
     ansible.builtin.file:
