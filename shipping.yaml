@@ -18,6 +18,12 @@
   #   - cryptography
   #   - PyMySQL
 
+  - name: install PyMySQL and cryptography
+  ansible.builtin.pip:
+    name: PyMySQL
+    executable: pip3.9
+    state: present
+
   - name: create app directory
     ansible.builtin.file:
       path: /app
